@@ -1,24 +1,19 @@
 {
   "name": "science_time",
   "version": "1.0.0",
-  "main": "main.js",
-  "dependencies": {
-    "basic-auth": "^2.0.1",
-    "call-bind-apply-helpers": "^1.0.2",
-    "es-errors": "^1.3.0",
-    "es-object-atoms": "^1.1.1",
-    "function-bind": "^1.1.2",
-    "mime": "^1.6.0",
-    "opener": "^1.5.2",
-    "safer-buffer": "^2.1.2",
-    "whatwg-encoding": "^2.0.0"
-  },
-  "devDependencies": {},
+  "description": "매일 10분 과학 웹앱",
+  "main": "index.js",
   "scripts": {
+    "start": "live-server public",
+    "build": "echo \"No build step required\"",
+    "commit": "git add public && git commit -am \"Auto commit\" && git push",
+    "watch": "chokidar \"public/**/*\" -c \"npm run commit\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "송영강",
   "license": "ISC",
-  "description": ""
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "live-server": "^1.2.1"
+  }
 }
