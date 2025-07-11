@@ -1,0 +1,413 @@
+/* reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  overflow:hidden;
+  background:#000;
+  font-family:'Noto Sans KR',sans-serif;
+  color:#e0e0e0;
+  height:100vh;
+}
+
+/* 별 컨테이너 */
+.star-container {
+  position:fixed; top:0; left:0;
+  width:100vw; height:100vh;
+  pointer-events:none; z-index:0;
+}
+/* 별 스타일 */
+.star {
+  position:absolute;
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle,#fff 0%,#fff 90%,transparent);
+  opacity: var(--opa);
+  border-radius:50%;
+  box-shadow:0 0 6px rgba(255,255,255,1),0 0 3px rgba(255,255,255,0.6);
+  filter:drop-shadow(0 0 4px rgba(255,255,255,0.8));
+  transform:translate(var(--x),var(--y));
+  animation: fall var(--dur) var(--delay) linear infinite,
+             twinkle 1.2s calc(var(--delay)*0.4) ease-in-out infinite;
+}
+@keyframes fall {
+  to { transform:translate(calc(var(--x)-150vw),calc(var(--y)+150vh)); }
+}
+@keyframes twinkle {
+  0%,100% { opacity: var(--opa); }
+  50%     { opacity: calc(var(--opa)*0.1); }
+}
+
+/* 로그인 박스 */
+.main-box {
+  position:relative; z-index:1;
+  width:360px; padding:2.5rem 2rem;
+  background:rgba(5,5,20,0.95);
+  border-radius:16px;
+  box-shadow:0 0 30px rgba(0,200,255,0.7);
+  text-align:center;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+}
+.main-box h1 {
+  font-family:'Orbitron',sans-serif;
+  font-size:2.4rem; margin-bottom:0.3rem;
+  color:#00F0FF;
+}
+.main-box .subtitle {
+  font-family:'Orbitron',sans-serif;
+  font-size:1rem; margin-bottom:1.8rem;
+  color:#88E0FF;
+}
+.notice {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* 버튼 그룹(세로) */
+.buttons-vertical {
+  display:flex;
+  flex-direction:column;
+  gap:0.8rem;
+}
+/* 버튼 공통 */
+.buttons-vertical .btn {
+  width:100%;
+  padding:12px 0;
+  border:none; border-radius:6px;
+  font-size:1rem; color:#fff;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+  text-decoration:none;
+}
+
+/* “회원가입” 버튼도 index 양식 그대로 맞추기 */
+.buttons-vertical .btn.signup {
+  background: #F48009;   /* 기존 pink 계열 */
+  color: #fff;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+}
+.buttons-vertical .btn.signup:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(255,58,111,0.6);
+}
+
+/* Google 버튼 */
+.social.google {
+  background:#4285F4; /* Google 공식 파랑 */
+}
+/* 준비 중 버튼 */
+.disabled {
+  opacity:0.3;
+  pointer-events:none;
+}
+/* 호버 */
+.buttons-vertical .btn:not(.disabled):hover {
+  transform:scale(1.03);
+  box-shadow:0 0 12px rgba(0,255,255,0.6);
+}
+
+
+/* --- (위에 index.css 전체 내용이 그대로 남아 있어야 합니다) --- */
+/* 여기서는 signup 전용 추가/변경분만 보여드립니다 */
+/* 전체 폰트 수정: 본문은 Noto Sans KR, 제목은 Orbitron */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.main-box h1, .subtitle {
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* 세로 정렬 버튼 */
+.buttons-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.buttons-vertical .btn {
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Google: 흰 배경 + 파란 텍스트/테두리 */
+.social.google {
+  background: #fff;
+  color: #4285F4;
+  border: 1px solid #4285F4;
+}
+
+/* Naver */
+.social.naver {
+  background: #03C75A;
+}
+
+/* Facebook */
+.social.facebook {
+  background: #1877F2;
+}
+
+/* Instagram (그라디언트) */
+.social.instagram {
+  background: radial-gradient(circle at 30% 30%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
+/* hover 이펙트 */
+.buttons-vertical .btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,255,255,0.8);
+}
+
+/* school_info.css */
+/* Override or add form-specific styles, but keep design consistent */
+
+
+/* main-box 너비 확장 */
+.wider-box {
+  width: 400px; /* 기존 360px 보다 넓혀 한 줄 표시 가능 */
+}
+
+/* subtitle 한 줄 유지 */
+.subtitle.single-line {
+  white-space: nowrap;
+}
+
+/* select 스타일 (기존과 동일) */
+.main-box form select {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #112;
+  color: #eef;
+  font-size: 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.main-box form select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 저장 버튼: select와 동일 너비, pink 계열 */
+.btn.save {
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  background: #F48009; /* 회원가입 pink 계열 */
+  color: #fff;
+  font-size: 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn.save:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255,58,111,0.6);
+}
+
+.main-box {
+  width: 50%;
+  max-width: 400px;  /* 원하시는 최대 너비로 조정하세요 */
+}
+
+/* 2) select 에서 선택된 값이 보이지 않는 문제 해결 */
+.main-box form select {
+  color: #fff;       /* 선택된 옵션 글자색을 흰색으로 고정 */
+}
+.main-box form select option {
+  color: #000;       /* 드롭다운 목록 내부 옵션은 검은색으로 */
+}
+select {
+  color: #fff !important;
+}
+
+/* 목록 안의 옵션들 */
+
+.main-box select {
+  color: #fff !important;
+  background-color: rgba(255,255,255,0.05) !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+/* 2) 선택된 값(셀렉트 박스 안) 은 흰색 글씨로 */
+.main-box form select {
+  color: #fff !important;
+}
+
+/* 3) 펼쳐진 옵션 목록 전체 배경은 진한 검정, 글씨는 흰색 */
+.main-box form select option {
+  background-color: #111 !important;
+  color: #fff !important;
+}
+
+/* 4) 안내용 placeholder 옵션만 연한 회색 처리 */
+.main-box form select option[value=""] {
+  color: #888 !important;
+}
+/* --- 웰컴 페이지 전용 --- */
+#welcome-title {
+  font-size: 2.5rem;
+  color: #00e5ff;
+  margin-bottom: 0.5rem;
+}
+#welcome-subtitle {
+  font-size: 1.1rem;
+  color: #c4d8e4;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* 박스 크기 · 위치 */
+.welcome-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 2.5rem 1.5rem;
+    background: rgba(10,12,27,0.9);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0,229,255,0.6);
+    text-align: center;
+    line-height: 1.2; /* 두 줄이 붙지 않도록 */
+    word-break: keep-all;
+}
+
+/* 버튼 그룹 */
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+/* 프로필 설정(민트→블루) */
+.btn-primary,
+button.save,      /* 혹은 .btn.save */
+button[type="submit"] {
+  background: linear-gradient(135deg, #ffa000, #ff6f00) !important;
+  color: #fff !important;
+  border: none;
+}
+/* 첫 퀴즈 풀러 가기(오렌지) */
+.btn-secondary {
+  background: linear-gradient(135deg,#ffa000,#ff6f00);
+  color: #fff;
+}
+/* 1) 닉네임 박스 너비 확장: 제목 한 줄 처리 */
+.nickname-box {
+  max-width: 480px;      /* 기존 320px → 360px으로 넉넉히 */
+}
+
+/* 2) 닉네임 완료 버튼 너비·색상 동기화 */
+.nickname-box .btn-primary {
+  width: 80%;           /* 박스 안에서 꽉 채움 */
+  background: linear-gradient(135deg,#ffa000,#ff6f00); /* 기존 스쿨인포 저장 버튼 그라데이션 */
+  color: #fff;
+}
+/* 닉네임 입력 페이지 전용 */
+.welcome-box.nickname-box {
+  /* 기존 .welcome-box 스타일을 상속하면서 너비 조정 */
+  width: 500px; /* 필요에 따라 조절 */
+  padding: 2rem;
+}
+
+/* 입력 행 사이에 간격 주기 */
+.welcome-box.nickname-box .form-row {
+  margin-bottom: 1.5rem;
+}
+
+/* 완료 버튼 위 여유 */
+.welcome-box.nickname-box .btn.save {
+  margin-top: 2rem;
+  width: 100%;       /* 학교정보 저장 버튼과 같은 너비 */
+  background: #ff8c00; /* 기존 오렌지 계열 색상 */
+}
+
+/* 입력창을 검은 배경, 흰 글씨, 충분한 패딩으로 */
+.nickname-box .input-group input {
+  width: 100%;
+  background-color: #1b1b2e;  /* 진한 검은색 */
+  color: #fff;                /* 흰 글씨 */
+  border: 1px solid #333;     
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+/* style.css 맨 아래에 추가 */
+.character-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ───────────────────────────────────────────────────────
+   공통 유틸리티
+──────────────────────────────────────────────────────── */
+.hidden {
+    display: none !important;
+}
+
+/* 스텝 인디케이터(동그라미) 활성화 표시 */
+.stepper .step-indicator {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #ddd;
+    transition: background .3s ease;
+}
+
+    .stepper .step-indicator.active {
+        background: #4caf50;
+    }
+
+/* 요약 페이지 리스트 */
+.summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+    .summary-list li {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+    }

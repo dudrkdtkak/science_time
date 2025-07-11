@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>닉네임 설정 | 매일 10분 과학</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <!-- 별 배경 (인덱스와 동일) -->
+  <div class="star-container"></div>
+  <script>
+    const container = document.querySelector('.star-container');
+    const STAR_COUNT = 2000;
+    for (let i = 0; i < STAR_COUNT; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.setProperty('--x', Math.random() * 100 + 'vw');
+      star.style.setProperty('--y', (Math.random() * 200 - 50) + 'vh');
+      star.style.setProperty('--size', (1 + Math.random() * 3) + 'px');
+      star.style.setProperty('--dur', (10 + Math.random() * 5) + 's');
+      star.style.setProperty('--delay', (Math.random() * 3) + 's');
+      star.style.setProperty('--opa', (0.8 + Math.random() * 0.2));
+      container.appendChild(star);
+    }
+  </script>
+
+  <!-- 닉네임 입력 박스 -->
+  <div class="main-box nickname-box">
+    <h1>🎉 닉네임을 알려주세요!</h1>
+    <p class="subtitle">성과 이름을 입력하시면, 더욱 친근하게 불러드릴게요.</p>
+
+    <form id="nickname-form">
+      <div class="input-group">
+        <label for="last-name">성</label>
+        <input type="text" id="last-name" placeholder="예) 홍" required />
+      </div>
+      <div class="input-group">
+        <label for="first-name">이름</label>
+        <input type="text" id="first-name" placeholder="예) 길동" required />
+      </div>
+       <br><br>
+      <button type="submit" class="btn btn-primary">완료</button>
+    </form>
+  </div>
+
+   <script>
+    document.getElementById('nickname-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const last  = document.getElementById('last-name').value.trim();
+      const first = document.getElementById('first-name').value.trim();
+      if (!last || !first) {
+        alert('성·이름을 모두 입력해주세요.');
+        return;
+      }
+      const profile = JSON.parse(localStorage.getItem('user_profile')||'{}');
+      profile.lastName  = last;
+      profile.firstName = first;
+      localStorage.setItem('user_profile', JSON.stringify(profile));
+      window.location.href = 'character.html';
+    });
+  </script>
+    
+  </script>
+</body>
+</html>

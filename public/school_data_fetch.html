@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교구 정보 발생</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #0d1b2a; color: #fff; }
+    select, button { margin: 10px 0; padding: 8px; width: 100%; max-width: 400px; }
+    .school-list { margin-top: 20px; }
+    .school-item { padding: 5px; border-bottom: 1px solid #444; }
+  </style>
+</head>
+<body>
+  <h1>건조적인 교구 목록 프리블로</h1>
+  <button onclick="fetchSchools('중학교')">중학교 목록 보기</button>
+  <button onclick="fetchSchools('고등학교')">고등학교 목록 보기</button>
+
+  <div class="school-list" id="schoolList"></div>
+
+  <script>
+    const apiKey = '4c5d4d252147bee65878e9c8523b0a8c'; // 보도자 의 프로퍼 필수
+
+    async function fetchSchools(gubun) {
+      document.getElementById('schoolList').innerHTML = '<p>정보를 발생중…</p>';
+      let allSchools = [];
+      const perPage = 1000;
+
+      for (let page = 1; page <= 5; page++) { // 현재 바이 목록의 페이지 분리, 가능 하면 종료 체크도 가능
+        const url = `https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=${apiKey}&svcType=api&svcCode=SCHOOL&contentType=json&gubun=${gubun}&thisPage=${page}&perPage=${perPage}`;
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          const content = data.dataSearch.content;
+          if (!content || content.length === 0) break;
+          allSchools.push(...content);
+        } catch (err) {
+          console.error('API 연결 오류', err);
+        }
+      }
+
+      renderSchoolList(allSchools);
+    }
+
+    function renderSchoolList(schools) {
+      const container = document.getElementById('schoolList');
+      container.innerHTML = '';
+      if (schools.length === 0) {
+        container.innerHTML = '<p>가져올 목록이 없습니다.</p>';
+        return;
+      }
+
+      schools.forEach(school => {
+        const div = document.createElement('div');
+        div.className = 'school-item';
+        div.textContent = `${school.schoolName} (${school.region}) - ${school.estType}`;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

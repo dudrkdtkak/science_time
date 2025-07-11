@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>학교 정보 입력 - 매일 10분 과학</title>
+
+    <!-- Orbitron & Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- 별 배경 (index와 동일) -->
+    <div class="star-container"></div>
+
+    <!-- 입력 폼 박스 -->
+    <div class="main-box wider-box">
+        <h1>학교 정보 입력</h1>
+        <p class="subtitle single-line">정확한 정보를 주시면 우리 '<strong>반</strong>'에 큰 혜택이 있어요!</p>
+
+        <form id="schoolForm">
+            <select id="userType" name="userType">
+                <option value="">당신은 어떤 학교 단계에 있나요?</option>
+                <option value="중학생">중학생</option>
+                <option value="고등학생">고등학생</option>
+                <option value="재수생">재수생</option>
+                <option value="대학생">대학생</option>
+                <option value="일반인">일반인</option>
+            </select>
+
+            <select id="region1" name="region1" disabled>
+                <option value="">시/도를 선택하세요</option>
+            </select>
+
+            <select id="region2" name="region2" disabled>
+                <option value="">시/군/구를 선택하세요</option>
+            </select>
+
+            <select id="schoolSelect" name="schoolName" disabled>
+                <option value="">학교를 선택하세요</option>
+            </select>
+
+            <select id="gradeSelect" disabled>
+                <option value="">학년을 선택하세요</option>
+            </select>
+
+            <select id="className" name="className" disabled>
+                <option value="">반을 선택하세요</option>
+                <option value="1">1반</option>
+                <option value="2">2반</option>
+                <option value="3">3반</option>
+                <option value="4">4반</option>
+                <option value="5">5반</option>
+                <option value="6">6반</option>
+                <option value="7">7반</option>
+                <option value="8">8반</option>
+                <option value="9">9반</option>
+                <option value="10">10반</option>
+                <option value="11">11반</option>
+                <option value="12">12반</option>
+                <option value="13">13반</option>
+                <option value="14">14반</option>
+                <option value="15">15반</option>
+            </select>
+
+            <button type="submit" id="saveBtn" class="btn save">저장</button>
+        </form>
+    </div>
+
+    <!-- 별 생성 스크립트 (index와 동일) -->
+    <script>
+        const container = document.querySelector('.star-container');
+        const STAR_COUNT = 2000;
+        for (let i = 0; i < STAR_COUNT; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.setProperty('--x', Math.random() * 100 + 'vw');
+            star.style.setProperty('--y', (Math.random() * 200 - 50) + 'vh');
+            star.style.setProperty('--size', (1 + Math.random() * 3) + 'px');
+            star.style.setProperty('--dur', (10 + Math.random() * 5) + 's');
+            star.style.setProperty('--delay', (Math.random() * 3) + 's');
+            star.style.setProperty('--opa', (0.8 + Math.random() * 0.2));
+            container.appendChild(star);
+        }
+    </script>
+
+    <!-- 저장 로직 추가 -->
+ 
+
+    <!-- 기존 school_info.js (필요한 경우 남겨두세요) -->
+    <script type="module" src="school_info.js"></script>
+</body>
+</html>
