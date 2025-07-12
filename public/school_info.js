@@ -1,4 +1,32 @@
+// school_info.js (최종 강제 디버깅 버전)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import {
+    getFirestore,
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+// ❗️ 본인의 실제 Firebase 설정 값으로 이 부분을 교체해야 합니다.
+const firebaseConfig = {
+    apiKey: "AIzaSyBHjJw2buImt4p5uqtSFWNij5rENYIMsAI",
+    authDomain: "science-time-7cb8e.firebaseapp.com",
+    projectId: "science-time-7cb8e",
+    storageBucket: "science-time-7cb8e.appspot.com",
+    messagingSenderId: "999893607916",
+    appId: "1:999893607916:web:5ccae72663ca5f52e0ccc9",
+    measurementId: "G-G5FH9LKN51"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 document.addEventListener('DOMContentLoaded', () => {
+    // --- HTML 요소 변수 선언 (이전과 동일) ---
     const userType = document.getElementById('userType');
     const region1 = document.getElementById('region1');
     const region2 = document.getElementById('region2');
@@ -6,148 +34,73 @@ document.addEventListener('DOMContentLoaded', () => {
     const gradeSelect = document.getElementById('gradeSelect');
     const classSelect = document.getElementById('className');
     const form = document.getElementById('schoolForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+    let currentUser = null;
+    let rawItems = [];
+    let selectedSchoolLevel = "";
 
-    // 하위 셀렉트 초기화 함수
-    function resetBelow(elem) {
-        const map = {
-            region1: [region2, schoolSelect, gradeSelect, classSelect],
-            region2: [schoolSelect, gradeSelect, classSelect],
-            schoolSelect: [gradeSelect, classSelect],
-            gradeSelect: [classSelect]
-        };
-        (map[elem.id] || []).forEach(el => {
-            el.disabled = true;
-            el.innerHTML = `<option value="">${el.id === 'gradeSelect' ? '학년을 선택하세요' : '선택하세요'}</option>`;
-        });
-    }
-
-    // 전체 초기화
-    function resetAll() {
-        [region1, region2, schoolSelect, gradeSelect, classSelect].forEach(el => {
-            el.disabled = true;
-            el.innerHTML = `<option value="">${el.id === 'gradeSelect' ? '학년을 선택하세요' : '선택하세요'}</option>`;
-        });
-    }
-
-    resetAll();
-
-    // 1) userType 선택 처리
-    userType.onchange = () => {
-        resetAll();
-        const v = userType.value;
-        if (v === '중학생' || v === '고등학생') {
-            region1.disabled = false;
-            region1.innerHTML = '<option value="">시/도를 선택하세요</option>';
-            SIDO.forEach(o => {
-                const e = document.createElement('option');
-                e.value = o.code;
-                e.textContent = o.name;
-                region1.appendChild(e);
-            });
+    // --- 로그인 상태 확인 (이전과 동일) ---
+    submitButton.disabled = true;
+    submitButton.textContent = '로그인 정보 확인 중...';
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            currentUser = user;
+            submitButton.disabled = false;
+            submitButton.textContent = '가입 완료';
         } else {
-            // 성인/대학생 등은 바로 학교→학년→반 활성화
-            schoolSelect.disabled = gradeSelect.disabled = classSelect.disabled = false;
+            alert("로그인 세션이 만료되었습니다. 다시 가입을 시도해주세요.");
+            window.location.href = "signup.html";
         }
-    };
+    });
 
-    // 페이지 로드 시 최초 호출
-    userType.dispatchEvent(new Event('change'));
+    // --- 드롭다운 메뉴 관련 로직 (이전과 동일하여 생략) ---
+    // ...
 
-    // 2) 시/도 선택 → 학교 리스트
-    region1.onchange = async () => {
-        resetBelow(region1);
-        const code = region1.value;
-        if (!code) return;
-        try {
-            const res = await fetch(
-                `https://www.career.go.kr/cnet/openapi/getOpenApi?apiKey=4ca5d4d252147bee6587e8e9c8523b0a&svcType=api&svcCode=SCHOOL&contentType=xml&gubun=midd_list&region=${code}&thisPage=1&perPage=1000`
-            );
-            const xml = new DOMParser().parseFromString(await res.text(), 'application/xml');
-            rawItems = Array.from(xml.getElementsByTagName('content')).map(c => ({
-                name: c.getElementsByTagName('schoolName')[0]?.textContent.trim() || '',
-                district: (c.getElementsByTagName('adres')[0]?.textContent.split(/\s+/)[1] || '')
-            }));
-
-            const ds = Array.from(new Set(rawItems.map(i => i.district))).filter(d => d).sort((a, b) => a.localeCompare(b, 'ko'));
-            region2.disabled = false;
-            region2.innerHTML = '<option value="">시/군/구를 선택하세요</option>';
-            ds.forEach(d => {
-                const e = document.createElement('option');
-                e.value = d;
-                e.textContent = d;
-                region2.appendChild(e);
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    // 3) 구 선택 → 학교 활성화
-    region2.onchange = () => {
-        resetBelow(region2);
-        const d = region2.value;
-        schoolSelect.disabled = !d;
-        schoolSelect.innerHTML = '<option value="">학교를 선택하세요</option>';
-        rawItems
-            .filter(i => i.district === d)
-            .forEach(i => {
-                const e = document.createElement('option');
-                e.value = i.name;
-                e.textContent = i.name;
-                schoolSelect.appendChild(e);
-            });
-    };
-
-    // 4) 학교 선택 → 학년 활성화
-    schoolSelect.onchange = () => {
-        resetBelow(schoolSelect);
-        const s = schoolSelect.value;
-        gradeSelect.disabled = !s;
-        gradeSelect.innerHTML = '<option value="">학년을 선택하세요</option>';
-        for (let g = 1; g <= 3; g++) {
-            const e = document.createElement('option');
-            e.value = `${g}학년`;
-            e.textContent = `${g}학년`;
-            gradeSelect.appendChild(e);
-        }
-    };
-
-    // 5) 학년 선택 → 반 활성화
-    gradeSelect.onchange = () => {
-        resetBelow(gradeSelect);
-        const g = gradeSelect.value;
-        classSelect.disabled = !g;
-        classSelect.innerHTML = '<option value="">반을 선택하세요</option>';
-        for (let c = 1; c <= 15; c++) {
-            const e = document.createElement('option');
-            e.value = `${c}반`;
-            e.textContent = `${c}반`;
-            classSelect.appendChild(e);
-        }
-    };
-
-    // 6) 저장
-    form.onsubmit = e => {
+    // --- ✨✨✨ 강제 디버깅을 위한 최종 제출 로직 ✨✨✨ ---
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        alert('1. "가입 완료" 버튼 클릭을 감지했습니다.');
+
+        if (!currentUser) {
+            alert('2. 오류: currentUser 객체가 없습니다! 저장할 수 없습니다.');
+            return;
+        }
+        alert('2. 사용자(currentUser)가 확인되었습니다. UID: ' + currentUser.uid);
+
         const data = {
             userType: userType.value,
             region1: region1.options[region1.selectedIndex].text,
             region2: region2.value,
-            schoolName: schoolSelect.value,
-            grade: gradeSelect.value,
-            className: classSelect.value
+            schoolName: schoolSelect.value || "미입력",
+            grade: gradeSelect.value || "미입력",
+            className: classSelect.value || "미입력",
+            completedAt: new Date()
         };
-        localStorage.setItem('user_data', JSON.stringify(data));
-        window.location.href = 'welcome.html';
-    };
+        alert('3. 저장할 데이터 객체를 생성했습니다.');
+
+        try {
+            alert('4. Firestore에 저장을 시도합니다. (try 블록 시작)');
+            const userRef = doc(db, "users", currentUser.uid);
+            await setDoc(userRef, data, { merge: true });
+
+            alert('5. ✅ 저장 성공! main.html로 이동합니다.');
+            window.location.href = "main.html";
+
+        } catch (err) {
+            alert('5. ❌ 저장 실패! 오류가 발생했습니다. 다음 경고창에 오류 내용이 표시됩니다.');
+            alert('오류 메시지: ' + err.message); // 실제 오류 메시지 표시
+            console.error('전체 오류 객체:', err);
+        }
+    });
+
+    // --- 아래 함수 및 SIDO 배열은 생략 없이 모두 있어야 합니다. ---
+    function getPlaceholder(id) { /* 이전과 동일 */ }
+    function resetBelow(elem) { /* 이전과 동일 */ }
+    userType.addEventListener('change', () => { /* 이전과 동일 */ });
+    region1.addEventListener('change', async () => { /* 이전과 동일 */ });
+    region2.addEventListener('change', () => { /* 이전과 동일 */ });
+    schoolSelect.addEventListener('change', () => { /* 이전과 동일 */ });
+    gradeSelect.addEventListener('change', () => { /* 이전과 동일 */ });
 });
 
-// 시/도 목록
-const SIDO = [
-    { code: '100260', name: '서울특별시' },
-    { code: '100200', name: '부산광역시' },
-    /* 이하 생략… */
-];
-
-// API로부터 가져온 학교 rawItems 저장용
-let rawItems = [];
+const SIDO = [ /* 이전과 동일 */];
