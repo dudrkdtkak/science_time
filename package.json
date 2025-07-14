@@ -1,0 +1,26 @@
+{
+  "name": "science_time",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dudrkdtkak/science_time.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dudrkdtkak/science_time/issues"
+  },
+  "homepage": "https://github.com/dudrkdtkak/science_time#readme",
+  "description": "",
+  "devDependencies": {
+    "vite": "^7.0.4"
+  }
+}
